@@ -61,19 +61,21 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$storeAuthCredentialsAsyncAction =
+      AsyncAction('_UserStore.storeAuthCredentials');
+
+  @override
+  Future<void> storeAuthCredentials(User newUser, String newToken) {
+    return _$storeAuthCredentialsAsyncAction
+        .run(() => super.storeAuthCredentials(newUser, newToken));
+  }
+
   final _$_persistUserDataAsyncAction =
       AsyncAction('_UserStore._persistUserData');
 
   @override
   Future<void> _persistUserData() {
     return _$_persistUserDataAsyncAction.run(() => super._persistUserData());
-  }
-
-  final _$loadUserDataAsyncAction = AsyncAction('_UserStore.loadUserData');
-
-  @override
-  Future<void> loadUserData() {
-    return _$loadUserDataAsyncAction.run(() => super.loadUserData());
   }
 
   final _$_getUserDataFromSharedPrefsAsyncAction =
@@ -85,11 +87,11 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super._getUserDataFromSharedPrefs());
   }
 
-  final _$logoutAsyncAction = AsyncAction('_UserStore.logout');
+  final _$loadUserDataAsyncAction = AsyncAction('_UserStore.loadUserData');
 
   @override
-  Future<void> logout() {
-    return _$logoutAsyncAction.run(() => super.logout());
+  Future<void> loadUserData() {
+    return _$loadUserDataAsyncAction.run(() => super.loadUserData());
   }
 
   final _$_removeUserDataFromAppAsyncAction =
@@ -99,6 +101,13 @@ mixin _$UserStore on _UserStore, Store {
   Future<void> _removeUserDataFromApp() {
     return _$_removeUserDataFromAppAsyncAction
         .run(() => super._removeUserDataFromApp());
+  }
+
+  final _$logoutAsyncAction = AsyncAction('_UserStore.logout');
+
+  @override
+  Future<void> logout() {
+    return _$logoutAsyncAction.run(() => super.logout());
   }
 
   final _$_UserStoreActionController = ActionController(name: '_UserStore');
@@ -115,11 +124,11 @@ mixin _$UserStore on _UserStore, Store {
   }
 
   @override
-  void storeAccesstoken(String newToken) {
+  void storeAccessToken(String newToken) {
     final _$actionInfo = _$_UserStoreActionController.startAction(
-        name: '_UserStore.storeAccesstoken');
+        name: '_UserStore.storeAccessToken');
     try {
-      return super.storeAccesstoken(newToken);
+      return super.storeAccessToken(newToken);
     } finally {
       _$_UserStoreActionController.endAction(_$actionInfo);
     }
@@ -131,6 +140,17 @@ mixin _$UserStore on _UserStore, Store {
         name: '_UserStore._removeUser');
     try {
       return super._removeUser();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void _removeToken() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore._removeToken');
+    try {
+      return super._removeToken();
     } finally {
       _$_UserStoreActionController.endAction(_$actionInfo);
     }

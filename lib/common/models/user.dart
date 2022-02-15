@@ -1,19 +1,19 @@
 class User {
-  Qualifications? qualifications;
-  List<SocialLinks>? socialLinks;
-  int? expirienceTime;
-  int? productionsCount;
-  num? grade;
-  String? password;
-  String? email;
-  String? profilePhoto;
-  List<String>? isFavorite;
-  List<String>? roles;
-  String? birthDate;
-  String? lastName;
-  String? firstName;
-  String? userId;
-  int? iV;
+  late Qualifications? qualifications;
+  late List<SocialLinks>? socialLinks;
+  late int? expirienceTime;
+  late int? productionsCount;
+  late num? grade;
+  late String? email;
+  late String? profilePhoto;
+  late List<String>? favorits;
+  late List<String>? roles;
+  late String? aboutMe;
+  late String? birthDate;
+  late String? lastName;
+  late String? firstName;
+  late String? userId;
+  late int? iV;
 
   User(
       {this.qualifications,
@@ -21,16 +21,55 @@ class User {
       this.expirienceTime,
       this.productionsCount,
       this.grade,
-      this.password,
       this.email,
       this.profilePhoto,
-      this.isFavorite,
+      this.favorits,
       this.roles,
       this.birthDate,
       this.lastName,
       this.firstName,
       this.userId,
       this.iV});
+
+  List<Degree> getGradDegrees(int index) {
+    return qualifications!.education!.gradDegrees!;
+  }
+
+  Degree getGradDegree(int index) {
+    return qualifications!.education!.gradDegrees!.elementAt(index);
+  }
+
+  List<Degree> getMasterDegrees(int index) {
+    return qualifications!.education!.gradDegrees!;
+  }
+
+  Degree getMasterDegree(int index) {
+    return qualifications!.education!.masterDegrees!.elementAt(index);
+  }
+
+  List<Degree> getPhdDegrees(int index) {
+    return qualifications!.education!.gradDegrees!;
+  }
+
+  Degree getPhdDegree(int index) {
+    return qualifications!.education!.phdDegrees!.elementAt(index);
+  }
+
+  List<Specializations> getSpecializationsDegrees(int index) {
+    return qualifications!.education!.specializations!;
+  }
+
+  Specializations getEspecialization(int index) {
+    return qualifications!.education!.specializations!.elementAt(index);
+  }
+
+  List<Interests> getInterests() {
+    return qualifications!.interests!;
+  }
+
+  Interests getInterest(int index) {
+    return qualifications!.interests!.elementAt(index);
+  }
 
   User.fromJson(Map<String, dynamic> json) {
     qualifications = json['qualifications'] != null
@@ -42,11 +81,11 @@ class User {
         socialLinks!.add(SocialLinks.fromJson(v));
       });
     }
-    isFavorite = json['isFavorite'].cast<String>();
+    aboutMe = json['aboutMe'];
+    favorits = json['favorits'].cast<String>();
     grade = json['grade'];
     expirienceTime = json['expirienceTime'];
     productionsCount = json['productionsCount'];
-    password = json['password'];
     email = json['email'];
     profilePhoto = json['profilePhoto'];
     roles = json['roles'].cast<String>();
@@ -65,13 +104,13 @@ class User {
     if (socialLinks != null) {
       data['socialLinks'] = socialLinks!.map((v) => v.toJson()).toList();
     }
+    data['aboutMe'] = aboutMe;
     data['expirienceTime'] = expirienceTime;
     data['productionsCount'] = productionsCount;
     data['grade'] = grade;
-    data['password'] = password;
     data['email'] = email;
     data['profilePhoto'] = profilePhoto;
-    data['isFavorite'] = isFavorite;
+    data['favorits'] = favorits;
     data['roles'] = roles;
     data['birthDate'] = birthDate;
     data['lastName'] = lastName;
@@ -98,11 +137,7 @@ class Qualifications {
       });
     }
     if (json['education'] != null) {
-      if (json['education'].isNotEmpty) {
-        education = Education.fromJson(json['education']);
-      }
-    } else {
-      education = null;
+      education = Education.fromJson(json['education']);
     }
   }
 
@@ -139,14 +174,14 @@ class Interests {
 }
 
 class Education {
-  late List<Degree>? gradDegrees;
-  late List<Degree>? masterDegress;
-  late List<Degree>? phdDegrees;
-  late List<Specializations>? specializations;
+  List<Degree>? gradDegrees = [];
+  List<Degree>? masterDegrees = [];
+  List<Degree>? phdDegrees = [];
+  List<Specializations>? specializations = [];
 
   Education(
       {this.gradDegrees,
-      this.masterDegress,
+      this.masterDegrees,
       this.phdDegrees,
       this.specializations});
 
@@ -159,9 +194,9 @@ class Education {
         });
       }
       if (json['masterDegrees'] != null) {
-        masterDegress = <Degree>[];
+        masterDegrees = <Degree>[];
         json['masterDegrees'].forEach((v) {
-          masterDegress!.add(Degree.fromJson(v));
+          masterDegrees!.add(Degree.fromJson(v));
         });
       }
       if (json['phdDegrees'] != null) {
@@ -187,7 +222,7 @@ class Education {
       data['gradDegrees'] = gradDegrees!.map((v) => v.toJson()).toList();
     }
     if (gradDegrees!.isNotEmpty) {
-      data['masterDegress'] = masterDegress!.map((v) => v.toJson()).toList();
+      data['masterDegrees'] = masterDegrees!.map((v) => v.toJson()).toList();
     }
     if (gradDegrees!.isNotEmpty) {
       data['phdDegrees'] = phdDegrees!.map((v) => v.toJson()).toList();

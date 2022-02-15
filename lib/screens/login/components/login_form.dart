@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:open_academic_app/common/ui_config/colors.dart';
 
 class LoginForm extends StatefulWidget {
   final TextEditingController passwordController;
@@ -70,40 +72,59 @@ class _FormBodyState extends State<FormBody> {
           controller: emailController,
           autocorrect: true,
           maxLines: 1,
+          cursorColor: secTextColor,
+          style: GoogleFonts.roboto(
+              fontSize: 16, fontWeight: FontWeight.normal, color: secTextColor),
           decoration: InputDecoration(
-              label: const Text('E-mail'),
+              label: Text(
+                'E-mail',
+                style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: secTextColor),
+              ),
               filled: true,
-              fillColor: Theme.of(context).colorScheme.background,
+              fillColor: lightGrey,
+              focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
               enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: Colors.transparent),
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: Colors.transparent),
                   borderRadius: BorderRadius.all(Radius.circular(8)))),
-          validator: (value) {
-            if (value!.isEmpty) return 'E-mail é um campo obrigatório';
-            return null;
-          },
+        ),
+        const SizedBox(
+          height: 20,
         ),
         TextFormField(
           controller: passwordController,
+          style: GoogleFonts.roboto(
+              fontSize: 16, fontWeight: FontWeight.normal, color: secTextColor),
           autocorrect: true,
           maxLines: 1,
+          cursorColor: secTextColor,
           obscureText: true,
           decoration: InputDecoration(
-              label: const Text('Senha'),
+              label: Text(
+                'Senha',
+                style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: secTextColor),
+              ),
               filled: true,
-              fillColor: Theme.of(context).colorScheme.background,
+              fillColor: lightGrey,
+              focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
               enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.all(Radius.circular(8)))),
-          validator: (value) {
-            if (value!.isEmpty) return 'Senha é um campo obrigatório';
-            return null;
-          },
         ),
       ],
     );

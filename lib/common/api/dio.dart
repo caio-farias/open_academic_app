@@ -1,8 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
+import 'package:open_academic_app/common/stores/user_store/user.store.dart';
 import 'package:open_academic_app/env.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDio {
   Dio? _dio;
@@ -10,7 +11,7 @@ class CustomDio {
 
   CustomDio() {
     _dio = Dio(BaseOptions(baseUrl: baseURL, connectTimeout: timeout, headers: {
-      "Content-Type": "application/json;charset=UTF-8",
+      "Content-Type": "application/json;charset=utf-8",
     }));
 
     _dio!.interceptors.add(CustomInterceptors());
@@ -18,7 +19,7 @@ class CustomDio {
 
   CustomDio.WithAuthorization() {
     _dio = Dio(BaseOptions(baseUrl: baseURL, connectTimeout: timeout, headers: {
-      "Content-Type": "application/json;charset=UTF-8",
+      "Content-Type": "application/json;charset=utf-8",
     }));
 
     _dio!.interceptors.add(CustomInterceptorsWithAuth());
@@ -51,12 +52,10 @@ class CustomInterceptors extends Interceptor {
 
 class CustomInterceptorsWithAuth extends CustomInterceptors {
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var accessToken = prefs.get('accessToken');
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final _userStore = GetIt.I.get<UserStore>();
+    String accessToken = _userStore.getAccessToken;
     options.headers['Authorization'] = 'Bearer $accessToken';
-    print(options.headers['Authorization']);
     print('REQUEST[${options.method}] => PATH: ${options.uri}');
     return super.onRequest(options, handler);
   }

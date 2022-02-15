@@ -1,8 +1,36 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:open_academic_app/common/components/loading.dart';
-import 'package:open_academic_app/common/models/user.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:open_academic_app/common/components/full_screen_dialog.dart';
 import 'package:open_academic_app/common/repositories/users_repo.dart';
+import 'package:open_academic_app/common/stores/filter_store/filter.store.dart';
 import 'package:open_academic_app/common/ui_config/colors.dart';
+import 'components/filter/filter_form_body.dart';
+import 'components/search_result/search_result.dart';
+
+Widget buildSearchPlaceholder(BuildContext context) {
+  return SvgPicture.asset('assets/icons/woman-and-laptop.svg');
+}
+
+Future<void> showFilterForm(BuildContext context) {
+  return showModalBottomSheet(
+    isScrollControlled: true,
+    isDismissible: true,
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
+    builder: (BuildContext context) => const SafeArea(
+      child: FullScreenDialogDemo(
+        body: FilterFormBody(),
+      ),
+    ),
+  );
+}
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -12,194 +40,88 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  String query = '';
-  String label = 'Busque por pessoas';
+  final TextEditingController _seachValueController = TextEditingController();
+  final _filterStore = GetIt.I.get<FilterStore>();
   late UsersRepository _usersRepository;
-  bool isLoading = true;
+  late Duration duration;
+  static String _searchValue = '';
+  final String label = 'Busque aqui..';
+
   @override
   void initState() {
     _usersRepository = UsersRepository();
-    isLoading = false;
+    _seachValueController.addListener(() {});
     super.initState();
+  }
+
+  void _attemptSearch() {
+    setState(() {
+      _searchValue = _seachValueController.value.text;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<User>>(
-        future: _usersRepository.getUsers(),
-        builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-          if (!snapshot.hasData ||
-              snapshot.connectionState == ConnectionState.waiting) {
-            return const Loading(
-              width: 100,
-              height: 100,
-              color: Colors.blue,
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('ERROR'),
-            );
-          }
-          final users = snapshot.data;
-          return buildList(users!);
-        });
-  }
-
-  Widget buildList(List<User> users) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: ListView.separated(
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 15,
-            );
-          },
-          physics: const AlwaysScrollableScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: users.length,
-          itemBuilder: (context, index) =>
-              buildUserCard(context, users[index])),
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextFormField(
+              controller: _seachValueController,
+              autocorrect: true,
+              maxLines: 1,
+              style: GoogleFonts.raleway(
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                color: secTextColor,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Busque aqui..',
+                hintStyle: GoogleFonts.raleway(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: secTextColor,
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                border: const UnderlineInputBorder(),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: () => _attemptSearch(),
+                        icon: const Icon(Icons.search_outlined)),
+                    IconButton(
+                      onPressed: () => showFilterForm(context),
+                      color: secTextColor,
+                      icon: const Icon(
+                        Icons.filter_list,
+                      ),
+                    )
+                  ],
+                ),
+                filled: true,
+                fillColor: Colors.transparent,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 100,
+          ),
+          Observer(
+            builder: (_) => Center(
+              child: _searchValue.isEmpty && _filterStore.getIsEmpty
+                  ? buildSearchPlaceholder(context)
+                  : buildSearchResult(
+                      context, _usersRepository.getUsers(_searchValue)),
+            ),
+          ),
+        ],
+      ),
     );
   }
-}
-
-Widget buildUserCard(BuildContext context, User user) {
-  return Container(
-    decoration: const BoxDecoration(
-      color: mainPurple,
-    ),
-    constraints: const BoxConstraints(
-        maxWidth: 300, maxHeight: 150, minWidth: 300, minHeight: 150),
-    child: buildUserCardBody(context, user),
-  );
-}
-
-Widget buildUserCardBody(BuildContext context, User user) {
-  String? firstName = user.firstName;
-  String? lastName = user.lastName;
-  num? prodCount = user.productionsCount;
-  String? grad = user.qualifications!.education!.gradDegrees!.isNotEmpty
-      ? user.qualifications!.education!.gradDegrees![0].degreeSubject
-      : '';
-
-  String? gradUni = user.qualifications!.education!.gradDegrees!.isNotEmpty
-      ? user.qualifications!.education!.gradDegrees![0].university
-      : '';
-
-  String? msc = user.qualifications!.education!.gradDegrees!.isNotEmpty
-      ? user.qualifications!.education!.masterDegress![0].degreeSubject
-      : '';
-  String? mscUni = user.qualifications!.education!.gradDegrees!.isNotEmpty
-      ? user.qualifications!.education!.masterDegress![0].university
-      : '';
-
-  return Padding(
-    padding: const EdgeInsets.only(top: 14.0),
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Column(
-            children: [
-              Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      user.profilePhoto == null
-                          ? "https://lolitajoias.com.br/wp-content/uploads/2020/09/no-image.jpg"
-                          : user.profilePhoto!,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                '$prodCount',
-                style: TextStyle(
-                  fontStyle: Theme.of(context).textTheme.bodyText1!.fontStyle,
-                  color: Theme.of(context).colorScheme.background,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'produções',
-                style: TextStyle(
-                  fontStyle: Theme.of(context).textTheme.bodyText1!.fontStyle,
-                  color: Theme.of(context).colorScheme.background,
-                  fontWeight: FontWeight.w100,
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          width: 18,
-        ),
-        SizedBox(
-          width: 200,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    firstName! + ' ' + lastName!,
-                    style: TextStyle(
-                      fontStyle:
-                          Theme.of(context).textTheme.bodyText1!.fontStyle,
-                      color: Theme.of(context).colorScheme.background,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Formação',
-                style: TextStyle(
-                  fontStyle: Theme.of(context).textTheme.bodyText1!.fontStyle,
-                  color: Theme.of(context).colorScheme.background,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 3,
-              ),
-              Text('Bacharel em $grad - $gradUni',
-                  style: TextStyle(
-                    fontStyle: Theme.of(context).textTheme.bodyText1!.fontStyle,
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.background,
-                    fontWeight: FontWeight.w400,
-                  )),
-              const SizedBox(
-                height: 1,
-              ),
-              const SizedBox(
-                height: 1,
-              ),
-              Text('Mestre em $msc - $mscUni ',
-                  style: TextStyle(
-                    fontStyle: Theme.of(context).textTheme.bodyText1!.fontStyle,
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.background,
-                    fontWeight: FontWeight.w400,
-                  )),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
 }

@@ -1,3 +1,4 @@
+import 'package:open_academic_app/common/ui_config/colors.dart';
 import 'package:open_academic_app/screens/welcome/body.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +7,9 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: const SafeArea(child: Body()),
+    return const Scaffold(
+      backgroundColor: bgMainWhite,
+      body: SafeArea(child: Body()),
     );
   }
 }

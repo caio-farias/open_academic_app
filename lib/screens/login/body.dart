@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:open_academic_app/common/components/logo.dart';
 import 'package:open_academic_app/common/repositories/auth_repo.dart';
+import 'package:open_academic_app/common/ui_config/colors.dart';
 import 'package:open_academic_app/common/ui_config/themes/buttons.dart';
+import 'package:open_academic_app/common/utils/utils.dart';
 import 'package:open_academic_app/screens/login/components/login_form.dart';
 
 class Body extends StatefulWidget {
@@ -9,6 +12,24 @@ class Body extends StatefulWidget {
 
   @override
   _BodyState createState() => _BodyState();
+}
+
+Future<void> _showDialogBox(BuildContext context, String message) async {
+  await showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+            title: Text(
+              message,
+            ),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: const Text('Voltar'),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              )
+            ],
+          ));
 }
 
 class _BodyState extends State<Body> {
@@ -22,17 +43,13 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
-  void redirecTo(BuildContext context, String route) {
-    Navigator.pushNamed(context, route);
-  }
-
   void _attemptLogin() async {
     try {
       await _authRepository.authenticate(
           emailController.value.text, passwordController.value.text);
-      redirecTo(context, '/search-page');
+      redirecTo(context, '/search-page', 'animated');
     } catch (e) {
-      print(e);
+      _showDialogBox(context, 'Ocorreu um erro no servidor..');
     }
   }
 
@@ -51,18 +68,19 @@ class _BodyState extends State<Body> {
             TextButton(
               style: flatButtonStyle,
               onPressed: _attemptLogin,
-              child: Text(
-                'Entrar',
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.background),
-              ),
+              child: Text('Entrar',
+                  style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
             ),
             TextButton(
                 onPressed: null,
-                child: Text(
-                  'Esqueceu a senha?',
-                  style: Theme.of(context).textTheme.bodyText2,
-                ))
+                child: Text('Esqueceu a senha?',
+                    style: GoogleFonts.roboto(
+                        fontSize: 16,
+                        color: secTextColor,
+                        fontWeight: FontWeight.normal)))
           ],
         )
       ],

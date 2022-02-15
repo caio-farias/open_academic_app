@@ -6,10 +6,10 @@ class UserStoreModel {
   late int? _expirienceTime;
   late int? _productionsCount;
   late num? _grade;
-  late String? _password;
   late String? _email;
+  late String? _aboutMe;
   late String? _profilePhoto;
-  late List<String>? _isFavorite;
+  late List<String>? _favorits;
   late List<String>? _roles;
   late String? _birthDate;
   late String? _lastName;
@@ -23,10 +23,10 @@ class UserStoreModel {
       int? expirienceTime,
       int? productionsCount,
       num? grade,
-      String? password,
       String? email,
+      String? aboutMe,
       String? profilePhoto,
-      List<String>? isFavorite,
+      List<String>? favorits,
       List<String>? roles,
       String? birthDate,
       String? lastName,
@@ -38,10 +38,10 @@ class UserStoreModel {
         _expirienceTime = expirienceTime,
         _productionsCount = productionsCount,
         _grade = grade,
-        _password = password,
         _email = email,
+        _aboutMe = aboutMe,
         _profilePhoto = profilePhoto,
-        _isFavorite = isFavorite,
+        _favorits = favorits,
         _roles = roles,
         _birthDate = birthDate,
         _lastName = lastName,
@@ -54,10 +54,10 @@ class UserStoreModel {
   int? get getExpirienceTime => _expirienceTime;
   int? get getProductionsCount => _productionsCount;
   num? get getGrade => _grade;
-  String? get getPassword => _password;
+  String? get getAboutMe => _aboutMe;
   String? get getEmail => _email;
   String? get getProfilePhoto => _profilePhoto;
-  List<String>? get getIsFavorite => _isFavorite;
+  List<String>? get getIsFavorite => _favorits;
   List<String>? get getRoles => _roles;
   String? get getBirthDate => _birthDate;
   String? get getLastName => _lastName;
@@ -65,7 +65,7 @@ class UserStoreModel {
   String? get getUserId => _userId;
   int? get getIV => _iV;
 
-  set setPassword(String? password) => _password = password;
+  set setAboutMe(String? aboutMe) => _aboutMe = aboutMe;
   set setQualifications(Qualifications? qualifications) =>
       _qualifications = qualifications;
   set setSocialLinks(List<SocialLinks>? socialLinks) =>
@@ -78,7 +78,7 @@ class UserStoreModel {
   set setEmail(String? email) => _email = email;
 
   set setProfilePhoto(String? profilePhoto) => _profilePhoto = profilePhoto;
-  set setIsFavorite(List<String>? isFavorite) => _isFavorite = isFavorite;
+  set setIsFavorite(List<String>? favorits) => _favorits = favorits;
   set setRoles(List<String>? roles) => _roles = roles;
   set setBirthDate(String? birthDate) => _birthDate = birthDate;
   set setLastName(String? lastName) => _lastName = lastName;
@@ -90,15 +90,15 @@ class UserStoreModel {
 
   set setNewUser(User newUser) {
     try {
-      setPassword = newUser.password;
       setQualifications = newUser.qualifications;
       setSocialLinks = newUser.socialLinks;
       setExpirienceTime = newUser.expirienceTime;
       setProductionsCount = newUser.productionsCount;
       setGrade = newUser.grade;
       setEmail = newUser.email;
+      setAboutMe = newUser.aboutMe;
       setProfilePhoto = newUser.profilePhoto;
-      setIsFavorite = newUser.isFavorite;
+      setIsFavorite = newUser.favorits;
       setRoles = newUser.roles;
       setBirthDate = newUser.birthDate;
       setLastName = newUser.lastName;
@@ -111,20 +111,20 @@ class UserStoreModel {
   }
 
   void resetUser() {
-    setPassword = null;
     setQualifications = null;
     setSocialLinks = null;
     setExpirienceTime = null;
     setProductionsCount = null;
     setGrade = null;
-    setEmail = null;
-    setProfilePhoto = null;
+    setEmail = '';
+    setAboutMe = '';
+    setProfilePhoto = '';
     setIsFavorite = null;
     setRoles = null;
-    setBirthDate = null;
-    setLastName = null;
-    setFirstName = null;
-    setUserId = null;
+    setBirthDate = '';
+    setLastName = '';
+    setFirstName = '';
+    setUserId = '';
     setIV = null;
   }
 
@@ -139,10 +139,10 @@ class UserStoreModel {
     data['expirienceTime'] = _expirienceTime;
     data['productionsCount'] = _productionsCount;
     data['grade'] = _grade;
-    data['password'] = _password;
     data['email'] = _email;
     data['profilePhoto'] = _profilePhoto;
-    data['isFavorite'] = _isFavorite;
+    data['favorits'] = _favorits;
+    data['aboutMe'] = _aboutMe;
     data['roles'] = _roles;
     data['birthDate'] = _birthDate;
     data['lastName'] = _lastName;
