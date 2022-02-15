@@ -26,6 +26,23 @@ Widget buildUserCardBody(BuildContext context, User user) {
         ),
         userMainInfo(firstName, lastName, grad, gradUni, master, masterUni,
             user.getInterests()),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (user.grade != null)
+              Text(user.grade.toString(),
+                  style: GoogleFonts.roboto(
+                    color: bgMainWhite,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  )),
+            const Icon(
+              Icons.star,
+              color: Colors.white,
+              size: 16,
+            ),
+          ],
+        )
       ],
     ),
   );
@@ -36,7 +53,7 @@ Widget buildDegreeCard(
   return Padding(
     padding: const EdgeInsets.only(top: 3),
     child: Text(
-      '$degreeType em $degreeSubject - $degreeUni',
+      '$degreeType em $degreeSubject ($degreeUni)',
       style: GoogleFonts.roboto(
         color: bgMainWhite,
         fontWeight: FontWeight.w400,
@@ -55,7 +72,7 @@ SizedBox userMainInfo(
     String? masterUni,
     List<Interests> interests) {
   return SizedBox(
-    width: 200,
+    width: 180,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
