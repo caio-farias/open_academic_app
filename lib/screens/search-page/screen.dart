@@ -30,6 +30,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: noBackAppbarWithProfileLink(
           context, profilePhoto, () => goToUserProfile()),
       backgroundColor: bgMainWhite,

@@ -53,7 +53,7 @@ Widget buildDegreeCard(
   return Padding(
     padding: const EdgeInsets.only(top: 3),
     child: Text(
-      '$degreeType em $degreeSubject ($degreeUni)',
+      '$degreeType em $degreeSubject',
       style: GoogleFonts.roboto(
         color: bgMainWhite,
         fontWeight: FontWeight.w400,

@@ -18,8 +18,8 @@ class UsersRepository {
       var res = await dio.get('/users', queryParameters: <String, dynamic>{
         'firstName': fullName[0],
         'lastName': fullName.length > 1 ? fullName[1] : '',
-        'roles': _filterStore.getSearchFilter.roles.content,
-        'languages': _filterStore.getSearchFilter.languages.content,
+        'roles[]': _filterStore.getSearchFilter.roles.content,
+        'languages[]': _filterStore.getSearchFilter.languages.content,
         'education': _filterStore.getSearchFilter.education.content,
         'expirienceTime': _filterStore.getSearchFilter.expirienceTime.content,
       });

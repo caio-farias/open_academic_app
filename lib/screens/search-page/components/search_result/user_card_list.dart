@@ -12,10 +12,8 @@ Widget buildUserCardsList(List<User> users) {
             height: 15,
           );
         },
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
-        primary: true,
+        primary: false,
         shrinkWrap: true,
         itemCount: users.length,
         itemBuilder: (context, index) => buildUserCard(context, users[index])),
